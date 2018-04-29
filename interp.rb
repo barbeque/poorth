@@ -3,6 +3,18 @@ require './extensions.rb'
 
 tokens = []
 
+def usage()
+  puts "usage:"
+  puts "interp.rb [flags] forth_file.f"
+  puts "flags:"
+  puts "  -h: Print usage information"
+end
+
+if ARGV.empty? or ARGV.any? { |a| a == '-h' }
+  usage()
+  exit
+end
+
 File.open(ARGV.first, "r").each_line do |line|
   # split it up
   # TODO: parse out comments
