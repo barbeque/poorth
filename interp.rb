@@ -38,18 +38,31 @@ def do_math(token, a, b)
   end
 end
 
-stack = []
+$stack = []
+$words = Hash.new
 
-tokens.each do |token|
-  # identify token type on the fly (should be done ahead of time, whatever)
-  if token.number?
-    stack.push(token)
-  elsif token.in?(['*', '/', '-', '+'])
-    b = stack.pop
-    a = stack.pop
-    stack.push(do_math(token, a, b))
-  elsif token == '.'
-    top = stack.pop
-    puts top
+def interpret(tokens)
+  tokens.each do |token|
+    # identify token type on the fly (should be done ahead of time, whatever)
+    if token.number?
+      $stack.push(token)
+    elsif token.in?(['*', '/', '-', '+'])
+      b = $stack.pop
+      a = $stack.pop
+      $stack.push(do_math(token, a, b))
+    elsif token == '.'
+      top = $stack.pop
+      puts top
+    elsif token.in?($words)
+      instructions = $words[token]
+      interpret(instructions)
+      # TODO: define word?
+      # TODO: default words?
+      # TODO: is this a sane way to do this?
+    else
+      puts "Error, unknown word '#{token}'." # line number?
+    end
   end
 end
+
+interpret(tokens)
